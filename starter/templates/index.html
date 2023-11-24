@@ -1,0 +1,102 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>AI Apps 101</title>  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">  
+    <style>  
+        .sidebar a.active {  
+            color: #168BF2;  
+            font-weight: bold;  
+        }  
+        .sidebar {  
+            height: 100%;  
+            width: 180px;  
+            position: fixed;  
+            z-index: 1;  
+            top: 0;  
+            left: 0;  
+            background-color: #111;  
+            overflow-x: hidden;  
+            padding-top: 20px;  
+            transition: all 0.3s;  
+        }  
+        .sidebar.collapsed {  
+            left: -200px;  
+        }  
+        .sidebar a {  
+            padding: 8px 8px 8px 16px;  
+            text-decoration: none;  
+            font-size: 18px;  
+            color: #9e9d9d;  
+            display: block;  
+        }  
+        .sidebar a:hover {  
+            color: #f1f1f1;  
+        }  
+        .content {  
+            margin-left: 200px;  
+            margin-right: 20px;  
+            padding: 1rem;  
+            transition: margin-left 0.3s;  
+        }  
+        .content.with-sidebar {  
+            margin-left: 0;  
+        }  
+        body {  
+            font-family: 'Inter', sans-serif;  
+            max-width: 1100px;  
+            margin: 0 auto;  
+            background-color: #0D0D0D;  
+            padding: 1rem;  
+            color: #ffffff;  
+        }  
+        h1 {  
+            color: #ffffff;  
+        }  
+        .toggle-sidebar {  
+            display: none;  
+        }  
+        @media screen and (max-width: 768px) {  
+            .sidebar {  
+                left: -200px;  
+            }  
+            .sidebar.collapsed {  
+                left: 0;  
+            }  
+            .content {  
+                margin-left: 0;  
+            }  
+            .content.with-sidebar {  
+                margin-left: 180px;  
+            }  
+            .toggle-sidebar {  
+                display: block;  
+                cursor: pointer;  
+            }  
+        }  
+    </style>  
+    <script>  
+        function toggleSidebar() {  
+            var sidebar = document.querySelector('.sidebar');  
+            var content = document.querySelector('.content');  
+            sidebar.classList.toggle('collapsed');  
+            content.classList.toggle('with-sidebar');  
+        }  
+    </script>  
+</head>  
+<body>  
+    <div class="sidebar">  
+        <a class="active" href="/">Home</a>  
+        <a href="/starterai">Starter AI</a>   
+    </div>  
+    <div class="content">  
+        <h1 class="toggle-sidebar" onclick="toggleSidebar()" style="font-size: 2rem;">☰</h1>  
+        <h1 style="font-size: 2.5rem;">Welcome to the AI Apps 101 Starter App! 🤖</h1>
+        <p style="font-size: 1.5rem;">  
+            👈 Get started by choosing the Starter AI app from the sidebar  
+        </p>   
+    </div>  
+</body>  
+</html>  

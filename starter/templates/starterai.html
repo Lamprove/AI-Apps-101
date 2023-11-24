@@ -1,0 +1,201 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Summarise Text</title>  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">  
+    <style>  
+        .dim-overlay {  
+            display: none;  
+            position: fixed;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            height: 100%;  
+            background-color: rgba(0, 0, 0, 0.5);  
+            z-index: 999;  
+        }  
+        .sidebar a.active {  
+            color: #168BF2;  
+            font-weight: bold;  
+        }  
+        .sidebar {  
+            height: 100%;  
+            width: 200px;  
+            position: fixed;  
+            z-index: 1;  
+            top: 0;  
+            left: 0;  
+            background-color: #111;  
+            overflow-x: hidden;  
+            padding-top: 20px;  
+            transition: all 0.3s;  
+        }  
+        .sidebar.collapsed {  
+            left: -200px;  
+        }  
+        .sidebar a {  
+            padding: 8px 8px 8px 16px;  
+            text-decoration: none;  
+            font-size: 18px;  
+            color: #9e9d9d;  
+            display: block;  
+        }  
+        .sidebar a:hover {  
+            color: #f1f1f1;  
+        }  
+        .content {  
+            margin-left: 200px;  
+            margin-right: 20px;  
+            padding: 1rem;  
+            transition: margin-left 0.3s;  
+        }  
+        .content.with-sidebar {  
+            margin-left: 0;  
+        }  
+        body {  
+            font-family: 'Inter', sans-serif;  
+            max-width: 850px;  
+            margin: 0 auto;  
+            background-color: #0D0D0D;  
+            padding: 1rem;  
+            color: #ffffff;  
+        }  
+        h1 {  
+            color: #ffffff;  
+        }  
+        textarea {  
+            width: 100%;  
+            padding: 1rem;  
+            margin: 0.5rem 0;  
+            font-size: 1rem;  
+            border-radius: 5px;  
+            height: 350px;  
+            background-color: #1A1A1A;  
+            color: #ffffff;  
+            border: 2px solid #333333;  
+            resize: none;  
+        }  
+        button {  
+            background-color: #168BF2;  
+            color: white;  
+            padding: 0.5rem 1rem;  
+            font-size: 1rem;  
+            margin: 0.5rem 0;  
+            cursor: pointer;  
+            border-radius: 5px;  
+        }  
+        button:hover {  
+            background-color: #1376d7;  
+        }  
+        .toggle-sidebar {  
+            display: none;  
+        }  
+        @media screen and (max-width: 768px) {  
+            .sidebar {  
+                left: -200px;  
+            }  
+            .sidebar.collapsed {  
+                left: 0;  
+            }  
+            .content {  
+                margin-left: 0;  
+            }  
+            .content.with-sidebar {  
+                margin-left: 200px;  
+            }  
+            .toggle-sidebar {  
+                display: block;  
+                cursor: pointer;  
+            }  
+        }  
+ 
+        .loading-indicator {  
+            display: none;  
+            align-items: center;  
+            justify-content: center;  
+            position: fixed;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            height: 100%;  
+            z-index: 1000;  
+        }  
+  
+        .loading-indicator::after {  
+            content: '';  
+            width: 3rem; /* Increase the size of the spinner */  
+            height: 3rem; /* Increase the size of the spinner */  
+            border: 0.45rem solid #efdbdb; /* Increase the border size proportionally */  
+            border-top-color: #168BF2;  
+            border-radius: 50%;  
+            animation: spin 1s linear infinite;  
+        }  
+  
+        @keyframes spin {  
+            0% {  
+                transform: rotate(0deg);  
+            }  
+            100% {  
+                transform: rotate(360deg);  
+            }  
+        }  
+  
+    </style>  
+    <script>  
+        function toggleSidebar() {  
+            var sidebar = document.querySelector('.sidebar');  
+            var content = document.querySelector('.content');  
+            sidebar.classList.toggle('collapsed');  
+            content.classList.toggle('with-sidebar');  
+        }  
+  
+        async function summariseText() {  
+            const summariseButton = document.getElementById("summarise-button");  
+            const loadingIndicator = document.querySelector(".loading-indicator");  
+            const dimOverlay = document.querySelector(".dim-overlay"); // Add this line  
+        
+            loadingIndicator.style.display = "flex"; // Show the loading indicator  
+            dimOverlay.style.display = "block"; // Show the dimmed overlay  
+        
+            const text = document.getElementById("input-text").value;  
+            const response = await fetch("/summarise_text", {  
+                method: "POST",  
+                headers: {  
+                    "Content-Type": "application/json",  
+                },  
+                body: JSON.stringify({ text: text }),  
+            });  
+            const data = await response.json();  
+            document.getElementById("output-text").value = data.result;  
+        
+            loadingIndicator.style.display = "none"; // Hide the loading indicator  
+            dimOverlay.style.display = "none"; // Hide the dimmed overlay  
+        }  
+
+  
+    </script>  
+</head>  
+<body>  
+    <div class="dim-overlay"></div>
+    <div class="sidebar">  
+        <a href="/">Home</a>  
+        <a class="active" href="/starterai">Starter AI</a>  
+    </div>  
+    <div class="content">  
+        <h1 class="toggle-sidebar" onclick="toggleSidebar()" style="font-size: 2rem;">☰</h1>  
+        <h1 style="font-size: 2.5rem;">✍️ Summarise text with AI</h1>
+        <br>  
+        <p>Enter your text:</p>  
+        <textarea id="input-text" spellcheck="true"></textarea>  
+        <button id="summarise-button" onclick="summariseText()">Summarise</button>  
+        <div class="loading-indicator"></div>  
+        <p>Result:</p>  
+        <textarea id="output-text" readonly></textarea>  
+    </div> 
+    <div class="loading-indicator"></div>  
+</body>  
+</html>  
+
+
